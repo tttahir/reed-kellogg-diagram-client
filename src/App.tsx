@@ -1,26 +1,32 @@
 import { Form } from "./components/Form";
-import "./style.css";
 
 export function App() {
   return (
-    <div className="p-5 max-w-6xl mx-auto">
+    <div className="mx-auto max-w-6xl p-5">
       <Form className="mb-4" />
       <div className="flex">
-        <div className="panel" id="tag-info" style={{ visibility: "hidden" }}>
-          <div className="panel-heading" id="word">
-            -
+        <div
+          id="tag-info"
+          style={{ visibility: "hidden" }}
+          className="mb-5 rounded border border-sky-200 opacity-0 transition-opacity duration-300"
+        >
+          <div
+            id="word"
+            className="bg-sky-200 py-3 px-4 text-center text-blue-500"
+          >
+            Asd asd -
           </div>
-          <div className="panel-item">
-            Part of speech: <span id="part"></span>
+          <div className="border-b border-sky-200 py-3 px-4">
+            Part of speech: <span id="part" className="align-top"></span>
           </div>
-          <div className="panel-item" id="dep">
+          <div id="dep" className="py-3 px-4">
             -
           </div>
         </div>
       </div>
-      <div className="block font-bold mb-2">Diagram</div>
-      <div className="relative" id="canvas-outer">
-        <canvas className="align-middle" id="draw" width="20" height="20" />
+      <div className="mb-2 block font-bold">Diagram</div>
+      <div id="canvas-outer" className="relative">
+        <canvas id="draw" className="align-middle" width="20" height="20" />
       </div>
     </div>
   );

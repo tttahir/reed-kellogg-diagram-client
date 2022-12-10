@@ -9,20 +9,19 @@ export const Form = ({ className }: FormProps) => {
 
   return (
     <form onSubmit={handleSubmit} className={className}>
-      <label className="block font-bold mb-2" htmlFor="sentence">
+      <label className="mb-2 block font-bold" htmlFor="sentence">
         Sentence
       </label>
       <div className="flex">
         <input
-          type="text"
-          className="rounded-l border border-gray-400 grow py-2 px-3 transition-colors duration-300 focus:border-gray-700 outline-none"
           id="sentence"
+          type="text"
+          className="grow rounded-l border border-gray-400 py-2 px-3 outline-none transition-colors duration-300 focus:border-sky-500"
           placeholder="Type the sentence which you want to diagram"
           onKeyDown={() => ""}
-          autoFocus
         />
         <button
-          className="bg-blue-600 px-3 rounded-r text-white cursor-pointer hover:bg-blue-800 transition-colors duration-300"
+          className="cursor-pointer rounded-r bg-sky-500 px-3 text-white transition-colors duration-300 hover:bg-sky-600"
           type="submit"
         >
           Send
