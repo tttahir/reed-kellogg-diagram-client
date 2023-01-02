@@ -1,10 +1,21 @@
-import { FormEvent } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { FormProps } from "./Form.types";
 
-export const Form = ({ className }: FormProps) => {
+export const Form = ({ className, onSubmit }: FormProps) => {
+  const [sentence, setSentence] = useState("");
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submit");
+
+    const pureSentence = sentence.replace(/\s{2,}/g, " ").trim();
+
+    if (pureSentence) {
+      onSubmit?.(pureSentence);
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSentence(e.target.value);
   };
 
   return (
@@ -14,15 +25,16 @@ export const Form = ({ className }: FormProps) => {
       </label>
       <div className="flex">
         <input
-          id="sentence"
           type="text"
-          className="grow rounded-l border border-gray-400 py-2 px-3 outline-none transition-colors duration-300 focus:border-sky-500"
+          id="sentence"
+          value={sentence}
+          onChange={handleChange}
           placeholder="Type the sentence which you want to diagram"
-          onKeyDown={() => ""}
+          className="grow rounded-l border border-gray-400 py-2 px-3 outline-none transition-colors duration-300 focus:border-sky-500"
         />
         <button
-          className="cursor-pointer rounded-r bg-sky-500 px-3 text-white transition-colors duration-300 hover:bg-sky-600"
           type="submit"
+          className="cursor-pointer rounded-r bg-sky-500 px-3 text-white transition-colors duration-300 hover:bg-sky-600"
         >
           Send
         </button>

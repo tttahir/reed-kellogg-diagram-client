@@ -1,9 +1,22 @@
-import { Form } from "./components/Form";
+import { useState } from "react";
+import { SentenceSyntaxTree } from "../../types/SentenceSyntaxTree";
+import { Canvas } from "../Canvas";
+import { Form } from "../Form";
+import { fetchSentenceSyntaxTree } from "./App.helpers";
 
 export function App() {
+  const [sentenceSyntaxTree, setSentenceSyntaxTree] = useState<
+    SentenceSyntaxTree[]
+  >([]);
+
+  const handleSubmit = async (sentence: string) => {
+    const newSentenceSyntaxTree = await fetchSentenceSyntaxTree(sentence);
+    setSentenceSyntaxTree(newSentenceSyntaxTree);
+  };
+
   return (
     <div className="mx-auto max-w-6xl p-5">
-      <Form className="mb-4" />
+      <Form className="mb-4" onSubmit={handleSubmit} />
       <div className="flex">
         <div
           id="tag-info"
@@ -14,7 +27,7 @@ export function App() {
             id="word"
             className="bg-sky-200 py-3 px-4 text-center text-blue-500"
           >
-            Asd asd -
+            -
           </div>
           <div className="border-b border-sky-200 py-3 px-4">
             Part of speech: <span id="part" className="align-top"></span>
@@ -24,10 +37,8 @@ export function App() {
           </div>
         </div>
       </div>
-      <div className="mb-2 block font-bold">Diagram</div>
-      <div id="canvas-outer" className="relative">
-        <canvas id="draw" className="align-middle" width="20" height="20" />
-      </div>
+      <h2 className="mb-2 block font-bold">Diagram</h2>
+      <Canvas sentenceSyntaxTree={sentenceSyntaxTree} />
     </div>
   );
 }
