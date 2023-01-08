@@ -1,5 +1,5 @@
-import { SentenceSyntaxTree } from "../../types/SentenceSyntaxTree";
+import { SentenceSyntaxNode } from "@app/types/SentenceSyntaxNode";
 
 export interface CanvasProps {
-  sentenceSyntaxTree: SentenceSyntaxTree[];
+  sentenceSyntaxTree: SentenceSyntaxNode[];
 }

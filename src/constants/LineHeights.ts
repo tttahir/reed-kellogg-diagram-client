@@ -1,9 +1,3 @@
-export enum TextIndents {
-  LEFT_INDENT = 20, // tind
-  RIGHT_INDENT = 10, // prht
-  BOTTOM_INDENT = 7, // tpb
-}
-
 export enum LineHeights {
   LINE1 = 25,
   LINE2 = 16,

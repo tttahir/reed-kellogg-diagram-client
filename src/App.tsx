@@ -1,22 +1,30 @@
 import { useState } from "react";
-import { SentenceSyntaxTree } from "../../types/SentenceSyntaxTree";
-import { Canvas } from "../Canvas";
-import { Form } from "../Form";
-import { fetchSentenceSyntaxTree } from "./App.helpers";
+import { SentenceSyntaxNode } from "@app/types/SentenceSyntaxNode";
+import { Canvas } from "./components/Canvas";
+import { Form } from "./components/Form";
+import { fetchSentenceSyntaxTree } from "@app/api/fetchSentenceSyntaxTree";
 
 export function App() {
   const [sentenceSyntaxTree, setSentenceSyntaxTree] = useState<
-    SentenceSyntaxTree[]
+    SentenceSyntaxNode[]
   >([]);
+  const [errorMsg, setErrorMsg] = useState<string>();
 
   const handleSubmit = async (sentence: string) => {
-    const newSentenceSyntaxTree = await fetchSentenceSyntaxTree(sentence);
-    setSentenceSyntaxTree(newSentenceSyntaxTree);
+    try {
+      const newSentenceSyntaxTree = await fetchSentenceSyntaxTree(sentence);
+      setSentenceSyntaxTree(newSentenceSyntaxTree);
+    } catch (error) {
+      setErrorMsg("Api unavailable. Please try again later");
+    }
   };
 
   return (
     <div className="mx-auto max-w-6xl p-5">
       <Form className="mb-4" onSubmit={handleSubmit} />
+      {Boolean(errorMsg) && (
+        <div className="mb-4 text-center text-red-500">{errorMsg}</div>
+      )}
       <div className="flex">
         <div
           id="tag-info"

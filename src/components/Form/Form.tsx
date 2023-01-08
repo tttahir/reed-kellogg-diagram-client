@@ -36,7 +36,7 @@ export const Form = ({ className, onSubmit }: FormProps) => {
           type="submit"
           className="cursor-pointer rounded-r bg-sky-500 px-3 text-white transition-colors duration-300 hover:bg-sky-600"
         >
-          Send
+          Draw
         </button>
       </div>
     </form>
