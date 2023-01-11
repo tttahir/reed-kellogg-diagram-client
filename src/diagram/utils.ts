@@ -3,10 +3,10 @@ import { SentenceSyntaxNode } from "@app/types/SentenceSyntaxNode";
 export const getTextWidth = (context: CanvasRenderingContext2D, str: string) =>
   context.measureText(str).width;
 
-export const getOneHalfNumber = (n: number) => n + n / 2;
+export const getOneHalfOfNumber = (n: number) => n + n / 2;
 
 export function fillText(node: SentenceSyntaxNode, x: number, y: number) {
-  // var tag = document.createElement("div");
+  // const tag = document.createElement("div");
   // tag.textContent = node.value;
   // tag.className = "tag";
   // tag.style.width = tw(node.value) + 5 + "px";

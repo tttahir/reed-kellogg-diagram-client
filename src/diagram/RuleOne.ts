@@ -2,7 +2,7 @@ import { TextIndents } from "@app/constants/TextIndents";
 import { LineHeights } from "@app/constants/LineHeights";
 import { SentenceSyntaxNode } from "@app/types/SentenceSyntaxNode";
 import { RuleUtils } from "./RuleUtils";
-import { getOneHalfNumber, fillText, getTextWidth } from "./utils";
+import { getOneHalfOfNumber, fillText, getTextWidth } from "./utils";
 import { NodeRelations } from "@app/constants/NodeRelations";
 import { DiagramRules, DiagramSubRules } from "@app/constants/DiagramRules";
 
@@ -62,7 +62,7 @@ export class RuleOne extends RuleUtils {
           y: {
             get() {
               if (node.parent.rule == DiagramRules.SIX) {
-                return node.parent.y - getOneHalfNumber(LineHeights.LINE6);
+                return node.parent.y - getOneHalfOfNumber(LineHeights.LINE6);
               }
 
               return node.parent.y;

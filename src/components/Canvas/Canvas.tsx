@@ -16,7 +16,6 @@ export const Canvas = ({ sentenceSyntaxTree }: CanvasProps) => {
   useEffect(() => {
     if (sentenceSyntaxTree.length > 0) {
       diagram!.render(sentenceSyntaxTree);
-      console.log(sentenceSyntaxTree);
     }
   }, [sentenceSyntaxTree]);
 
