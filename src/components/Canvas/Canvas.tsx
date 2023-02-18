@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import cn from "classnames";
-import { CanvasProps } from "./Canvas.types";
+
 import { DiagramRenderer } from "@app/diagram/DiagramRenderer";
+
+import { CanvasProps } from "./Canvas.types";
 
 export const Canvas = ({ sentenceSyntaxTree }: CanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -11,13 +13,13 @@ export const Canvas = ({ sentenceSyntaxTree }: CanvasProps) => {
     if (canvasRef.current) {
       setDiagram(new DiagramRenderer(canvasRef.current));
     }
-  }, [canvasRef.current]);
+  }, []);
 
   useEffect(() => {
     if (sentenceSyntaxTree.length > 0) {
       diagram!.render(sentenceSyntaxTree);
     }
-  }, [sentenceSyntaxTree]);
+  }, [sentenceSyntaxTree, diagram]);
 
   return (
     <div className="relative">

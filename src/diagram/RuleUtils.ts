@@ -1,10 +1,11 @@
 import { DiagramRules, DiagramSubRules } from "@app/constants/DiagramRules";
 import { TextIndents } from "@app/constants/TextIndents";
 import { SentenceSyntaxNode } from "@app/types/SentenceSyntaxNode";
+
 import { getTextWidth } from "./utils";
 
 export class RuleUtils {
-  constructor(protected readonly context: CanvasRenderingContext2D) {}
+  constructor(protected readonly canvas: HTMLCanvasElement, protected readonly context: CanvasRenderingContext2D) {}
 
   log(node: SentenceSyntaxNode) {
     const str = [
@@ -14,13 +15,8 @@ export class RuleUtils {
       "%c" + node.parent.value,
     ];
 
-    console.log(
-      str.join(" "),
-      "color: #79f592",
-      "color: #8daef6",
-      "color: #ffd979",
-      "color: #fff"
-    );
+    // eslint-disable-next-line no-console
+    console.log(str.join(" "), "color: #79f592", "color: #8daef6", "color: #ffd979", "color: #fff");
   }
 
   computeSidesPosition(node: SentenceSyntaxNode) {
@@ -29,8 +25,7 @@ export class RuleUtils {
 
     if (
       node.rule === DiagramRules.THREE ||
-      (node.rule === DiagramRules.FOUR &&
-        node.subRule === DiagramSubRules.ZERO) ||
+      (node.rule === DiagramRules.FOUR && node.subRule === DiagramSubRules.ZERO) ||
       (node.rule === DiagramRules.SEVEN && node.subRule === DiagramSubRules.ONE)
     ) {
       Object.defineProperty(node, "right", {
@@ -41,17 +36,33 @@ export class RuleUtils {
     } else {
       Object.defineProperty(node, "right", {
         get() {
-          if (this.value == "") return this.x;
+          if (this.value === "") return this.x;
 
           return Math.max(
             this.x + this.left + TextIndents.RIGHT_INDENT,
-            this.x +
-              getTextWidth(context, this.value) +
-              TextIndents.LEFT_INDENT * 2
+            this.x + getTextWidth(context, this.value) + TextIndents.LEFT_INDENT * 2
           );
         },
       });
     }
+  }
+
+  fillText({ value, part, dep }: SentenceSyntaxNode, x: number, y: number) {
+    const textRect = {
+      width: getTextWidth(this.context, value),
+      left: x,
+      top: y,
+    };
+
+    // tag.addEventListener("mouseenter", () => {
+    // if (tagInfo.style.visibility == "hidden") {
+    //   tagInfo.style.opacity = 1;
+    // }
+
+    // document.getElementById("word").textContent = node.value;
+    // document.getElementById("part").textContent = node.part;
+    // document.getElementById("dep").textContent = node.dep;
+    // });
   }
 
   increaseLeft(node: SentenceSyntaxNode, left: number) {
@@ -64,18 +75,16 @@ export class RuleUtils {
 
       if (
         [DiagramRules.ONE, DiagramRules.TWO].includes(pRule) &&
-        [DiagramRules.ONE, DiagramRules.SIX, DiagramRules.EIGHT].includes(
-          ppRule
-        )
+        [DiagramRules.ONE, DiagramRules.SIX, DiagramRules.EIGHT].includes(ppRule)
       ) {
-        console.log(parent.value, parentOfParent.value);
+        // console.log(parent.value, parentOfParent.value);
       } else if (
-        pRule == DiagramRules.SIX &&
-        pSubRule == DiagramSubRules.ONE &&
-        ppRule == DiagramRules.SIX &&
-        ppSubRule == DiagramSubRules.ZERO
+        pRule === DiagramRules.SIX &&
+        pSubRule === DiagramSubRules.ONE &&
+        ppRule === DiagramRules.SIX &&
+        ppSubRule === DiagramSubRules.ZERO
       ) {
-        console.log(parent.value, parentOfParent.value);
+        // console.log(parent.value, parentOfParent.value);
       } else {
         parentOfParent.left += left;
       }

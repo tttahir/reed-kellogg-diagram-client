@@ -3,29 +3,26 @@ import { TextIndents } from "@app/constants/TextIndents";
 import { LineHeights } from "@app/constants/LineHeights";
 import { SentenceSyntaxNode } from "@app/types/SentenceSyntaxNode";
 import { NodeRelations } from "@app/constants/NodeRelations";
-import {
-  CanvasContextSettings,
-  CANVAS_START_POS_X,
-  CANVAS_START_POS_Y,
-} from "@app/constants/renderSettings";
+import { CanvasContextSettings, CANVAS_START_POS_X, CANVAS_START_POS_Y } from "@app/constants/renderSettings";
+
 import { getTextWidth, getOneHalfOfNumber } from "./utils";
 import { RuleOne } from "./RuleOne";
 import { RuleTwo } from "./RuleTwo";
+import { RuleType } from "./types";
 
 export class DiagramRenderer {
   private readonly context: CanvasRenderingContext2D;
-  private readonly rules: RuleOne[];
+  private readonly rules: RuleType[];
 
   constructor(private canvas: HTMLCanvasElement) {
     const context = canvas.getContext("2d")!;
-    const { fontSize, fontFamily, strokeStyle, lineWidth } =
-      CanvasContextSettings;
+    const { fontSize, fontFamily, strokeStyle, lineWidth } = CanvasContextSettings;
 
     context.font = `${fontSize}px ${fontFamily}`;
     context.strokeStyle = strokeStyle;
     context.lineWidth = lineWidth;
     this.context = context;
-    this.rules = [RuleOne, RuleTwo].map((Rule) => new Rule(context));
+    this.rules = [RuleOne, RuleTwo].map((Rule) => new Rule(canvas, context));
   }
 
   public render(syntaxTree: SentenceSyntaxNode[]) {
@@ -33,7 +30,7 @@ export class DiagramRenderer {
     const canvas = this.canvas;
 
     syntaxTree.forEach((node, i) => {
-      console.log("<<<<<<<<< Sentence", i, ">>>>>>>>>");
+      // console.log("<<<<<<<<< Sentence", i, ">>>>>>>>>");
       this.computeRootNodePosition(node);
       this.computeChildNodesPosition(node, 0);
 
@@ -57,25 +54,17 @@ export class DiagramRenderer {
     node.y = CANVAS_START_POS_Y;
     node.left = leftIndent;
 
-    if (
-      node.rule === DiagramRules.NINE &&
-      node.subRule === DiagramSubRules.ZERO
-    ) {
+    if (node.rule === DiagramRules.NINE && node.subRule === DiagramSubRules.ZERO) {
       node.left += leftIndent * 2 + LineHeights.LINE2 * 2;
       Object.defineProperty(node, "right", {
         get() {
-          return (
-            this.x + this.left + leftIndent + getTextWidth(context, this.value)
-          );
+          return this.x + this.left + leftIndent + getTextWidth(context, this.value);
         },
       });
-    } else if (
-      node.rule !== DiagramRules.FOUR ||
-      node.subRule !== DiagramSubRules.ONE
-    ) {
+    } else if (node.rule !== DiagramRules.FOUR || node.subRule !== DiagramSubRules.ONE) {
       Object.defineProperty(node, "right", {
         get() {
-          if (this.value == "") {
+          if (this.value === "") {
             return this.x;
           }
 
@@ -104,10 +93,8 @@ export class DiagramRenderer {
     node.x += CANVAS_START_POS_X - rect.left;
     node.y += CANVAS_START_POS_Y - rect.top;
 
-    this.canvas.width =
-      rect.right + (CANVAS_START_POS_X - rect.left) + CANVAS_START_POS_X;
-    this.canvas.height =
-      rect.bottom + (CANVAS_START_POS_Y - rect.top) + CANVAS_START_POS_X;
+    this.canvas.width = rect.right + (CANVAS_START_POS_X - rect.left) + CANVAS_START_POS_X;
+    this.canvas.height = rect.bottom + (CANVAS_START_POS_Y - rect.top) + CANVAS_START_POS_X;
   }
 
   private getBoundingRect(
@@ -122,36 +109,24 @@ export class DiagramRenderer {
     const { rule, subRule, x, y } = node;
     const right = node.right || x;
 
-    if (rule == DiagramRules.SIX) {
-      rect.left = Math.min(
-        rect.left,
-        x - TextIndents.LEFT_INDENT - LineHeights.LINE6
-      );
-    } else if (rule == DiagramRules.FOUR && subRule == DiagramSubRules.ONE) {
+    if (rule === DiagramRules.SIX) {
+      rect.left = Math.min(rect.left, x - TextIndents.LEFT_INDENT - LineHeights.LINE6);
+    } else if (rule === DiagramRules.FOUR && subRule === DiagramSubRules.ONE) {
       rect.left = Math.min(rect.left, x - LineHeights.LINE4);
     } else {
       rect.left = Math.min(rect.left, x);
     }
 
-    if (rule == DiagramRules.ONE && subRule == DiagramSubRules.ZERO) {
+    if (rule === DiagramRules.ONE && subRule === DiagramSubRules.ZERO) {
       rect.bottom = Math.max(rect.bottom, y + LineHeights.LINE1);
     } else {
       rect.bottom = Math.max(rect.bottom, y);
     }
 
-    if (rule == DiagramRules.FOUR && subRule == DiagramSubRules.ONE) {
+    if (rule === DiagramRules.FOUR && subRule === DiagramSubRules.ONE) {
       rect.top = Math.min(rect.top, y - getOneHalfOfNumber(LineHeights.LINE4));
-    } else if (
-      rule == DiagramRules.SIX &&
-      subRule == DiagramSubRules.ZERO &&
-      node.as == NodeRelations.CHILD
-    ) {
-      rect.top = Math.min(
-        rect.top,
-        y -
-          getOneHalfOfNumber(LineHeights.LINE6) +
-          CanvasContextSettings.fontSize
-      );
+    } else if (rule === DiagramRules.SIX && subRule === DiagramSubRules.ZERO && node.as === NodeRelations.CHILD) {
+      rect.top = Math.min(rect.top, y - getOneHalfOfNumber(LineHeights.LINE6) + CanvasContextSettings.fontSize);
     } else {
       rect.top = Math.min(rect.top, y);
     }

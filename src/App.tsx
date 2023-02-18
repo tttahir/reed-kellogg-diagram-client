@@ -1,8 +1,10 @@
 import { useState } from "react";
+
 import { SentenceSyntaxNode } from "@app/types/SentenceSyntaxNode";
+import { fetchSentenceSyntaxTree } from "@app/api/fetchSentenceSyntaxTree";
+
 import { Canvas } from "./components/Canvas";
 import { Form } from "./components/Form";
-import { fetchSentenceSyntaxTree } from "@app/api/fetchSentenceSyntaxTree";
 
 export function App() {
   const [sentenceSyntaxTree, setSentenceSyntaxTree] = useState<
@@ -28,7 +30,6 @@ export function App() {
       <div className="flex">
         <div
           id="tag-info"
-          style={{ visibility: "hidden" }}
           className="mb-5 rounded border border-sky-200 opacity-0 transition-opacity duration-300"
         >
           <div

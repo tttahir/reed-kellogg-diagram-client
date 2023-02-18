@@ -1,16 +1,14 @@
 import { TextIndents } from "@app/constants/TextIndents";
 import { LineHeights } from "@app/constants/LineHeights";
 import { SentenceSyntaxNode } from "@app/types/SentenceSyntaxNode";
-import { RuleUtils } from "./RuleUtils";
-import { getOneHalfOfNumber, fillText, getTextWidth } from "./utils";
 import { NodeRelations } from "@app/constants/NodeRelations";
 import { DiagramRules, DiagramSubRules } from "@app/constants/DiagramRules";
 
-export class RuleOne extends RuleUtils {
-  constructor(context: CanvasRenderingContext2D) {
-    super(context);
-  }
+import { RuleUtils } from "./RuleUtils";
+import { getOneHalfOfNumber, getTextWidth } from "./utils";
+import { RuleType } from "./types";
 
+export class RuleOne extends RuleUtils implements RuleType {
   computePosition(node: SentenceSyntaxNode) {
     this.log(node);
 
@@ -47,13 +45,8 @@ export class RuleOne extends RuleUtils {
                 getTextWidth(context, this.value) + TextIndents.LEFT_INDENT * 2
               );
 
-              if (node.parent.rule == DiagramRules.SIX) {
-                return (
-                  node.parent.x -
-                  childWidth -
-                  TextIndents.LEFT_INDENT -
-                  LineHeights.LINE6
-                );
+              if (node.parent.rule === DiagramRules.SIX) {
+                return node.parent.x - childWidth - TextIndents.LEFT_INDENT - LineHeights.LINE6;
               }
 
               return node.parent.x - childWidth;
@@ -61,7 +54,7 @@ export class RuleOne extends RuleUtils {
           },
           y: {
             get() {
-              if (node.parent.rule == DiagramRules.SIX) {
+              if (node.parent.rule === DiagramRules.SIX) {
                 return node.parent.y - getOneHalfOfNumber(LineHeights.LINE6);
               }
 
@@ -76,22 +69,18 @@ export class RuleOne extends RuleUtils {
   render(node: SentenceSyntaxNode) {
     const context = this.context;
 
-    fillText(
-      node,
-      node.x + TextIndents.LEFT_INDENT,
-      node.y - TextIndents.BOTTOM_INDENT
-    );
+    this.fillText(node, node.x + TextIndents.LEFT_INDENT, node.y - TextIndents.BOTTOM_INDENT);
 
     switch (node.subRule) {
       // Rule(1:1)
       // __ parent __|__ child __
       case DiagramSubRules.ONE:
-        if (node.as == NodeRelations.PARENT) {
+        if (node.as === NodeRelations.PARENT) {
           context.moveTo(node.x, node.y);
           context.lineTo(node.right, node.y);
           context.moveTo(node.right, node.y - LineHeights.LINE1);
           context.lineTo(node.right, node.y);
-        } else if (node.as == NodeRelations.CHILD) {
+        } else if (node.as === NodeRelations.CHILD) {
           context.moveTo(node.x, node.y - LineHeights.LINE1);
           context.lineTo(node.x, node.y);
           context.lineTo(node.right, node.y);
@@ -102,12 +91,12 @@ export class RuleOne extends RuleUtils {
       // __ child __|__ parent __
       //            |
       case DiagramSubRules.ZERO:
-        if (node.as == NodeRelations.PARENT) {
+        if (node.as === NodeRelations.PARENT) {
           context.moveTo(node.x, node.y - LineHeights.LINE1);
           context.lineTo(node.x, node.y + LineHeights.LINE1);
           context.moveTo(node.x, node.y);
           context.lineTo(node.right, node.y);
-        } else if (node.as == NodeRelations.CHILD) {
+        } else if (node.as === NodeRelations.CHILD) {
           context.moveTo(node.x, node.y);
           context.lineTo(node.right, node.y);
           context.moveTo(node.right, node.y - LineHeights.LINE1);
